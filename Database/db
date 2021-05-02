@@ -1,0 +1,47 @@
+Imports System.Data.OleDb
+Public Class Form5
+    Dim con As New OleDbConnection
+    Dim bal As Double
+    Public Sub form5_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        con.ConnectionString = "Provider= Microsoft.ACE.OLEDB.12.0;Data Source=E:\ind.accdb"
+        con.Open()
+        showItems()
+    End Sub
+    Public Sub showItems()
+
+        Dim ds As New DataSet
+        Dim dt As New DataTable
+        ds.Tables.Add(dt)
+        Dim da As New OleDbDataAdapter
+        da = New OleDbDataAdapter("SELECT * FROM table1", con)
+        da.Fill(dt)
+        bal = dt.Rows(0).Item(3)
+    End Sub
+    Public Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+
+        If (TextBox1.Text = "") Then
+            MsgBox("PLEASE INPUT AMOUNT!")
+        Else
+
+            bal = bal - (Val(TextBox1.Text))
+            Dim str As String
+            str = "Update [table1] set [balence] ='" & bal & "' Where [ID] = '" & 1 & "'"
+            Dim cmd As OleDbCommand = New OleDbCommand(str, con)
+            cmd.ExecuteNonQuery()
+            con.Close()
+            Form6.Show()
+            Me.Close()
+            TextBox1.Clear()
+        End If
+    End Sub
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Label3.Text = Date.Now
+
+    End Sub
+
+    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+
+        Form8.Show()
+        Me.Close()
+    End Sub
+End Class
